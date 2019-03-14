@@ -6,19 +6,20 @@
 
 /* Estrutura TNo */
 typedef struct _TNo {
-    int vertice;
-    struct _TNo *proximo;
+  int vertice;
+  struct _TNo *proximo;
 } TNo;
 
 /* Estrutura TGrafo */
 typedef struct {
-    int V;
-    int A;
-    TNo **adj;
+  int V;
+  int A;
+  TNo **adj;
 } TGrafo;
 
 /* Declaração de funções */
 TGrafo *init (int V);
+TGrafo *grow (TGrafo *G, int V);
 void insertA (TGrafo *G, int v, int w);
 void show (TGrafo *G);
 int isPath (TGrafo *G, const int *seq, int k);
@@ -32,12 +33,12 @@ int main ()
 {
 
   TGrafo *grafo;
-  int seq[] = {0, 2, 4, 1, 2};
+  int seq[] = {0, 2, 4, 5, 1};
 
   grafo = init (6);
   insertA (grafo, 0, 2);
-  insertA (grafo, 0, 3);
   insertA (grafo, 0, 4);
+  insertA (grafo, 0, 3);
   insertA (grafo, 2, 1);
   insertA (grafo, 2, 4);
   insertA (grafo, 3, 4);
@@ -49,7 +50,7 @@ int main ()
 
   printf ("\nisPath = %d", isPath (grafo, seq, 4));
 
-  int vertice = 3;
+  int vertice = 1;
   int result = indeg (grafo, vertice);
   printf ("\nGrau de entrada [ %d ] -> %d ", vertice, result);
 
@@ -76,6 +77,14 @@ TGrafo *init (int V)
   /* Aloca um vetor de lista de adjacências */
   g->adj = (TNo **) calloc (V, sizeof (TNo *));
   return g;
+}
+
+TGrafo *grow (TGrafo *G, int V)
+{
+  /* Aloca um vetor de lista de adjacências */
+  G->adj = (TNo **) realloc (G->adj, sizeof (TNo *) * (G->V + V));
+  G->V += V;
+  return G;
 }
 
 /*
@@ -206,7 +215,7 @@ void show (TGrafo *G)
 
 void busca (TGrafo *G)
 {
-  int qtdVertices = G->V;
+  int qtdVertices = (G->V) + 1;
 
   /* Primeiro índice será ignorado */
   int visitado[qtdVertices];
@@ -217,42 +226,51 @@ void busca (TGrafo *G)
     visitado[i] = 0;
   }
 
-  for (i = 0; i < qtdVertices; i++)
+  TNo *root = NULL;
+  root = G->adj[0];
+  visitado[0] = 1;
+  printf (" %d", 0);
+  while (root != NULL)
   {
-    TNo *aux = NULL;
-    aux = G->adj[i];
-    int debug = aux->vertice;
-    busca_profundidade (G, aux, visitado);
+    busca_profundidade (G, root, visitado);
+    root = root->proximo;
   }
-  visitado;
 
+  printf ("\nVisitado -> [ ");
+  for (i = 0; i < qtdVertices - 1; i++)
+  {
+    printf ("%d ", visitado[i]);
+  }
+  printf ("]");
 }
 void busca_profundidade (TGrafo *G, TNo *V, int visitado[])
 {
   int vertice = V->vertice;
-  int visitadoAddress = vertice - 1;
-  int isVisitado = visitado[visitadoAddress];
+  int isVisitado = visitado[vertice];
   if (isVisitado)
+  {
     return;
+  }
 
-  /* Marca V como visitado */
-  visitado[visitadoAddress] = 1;
-
-  /* Imprime V */
+  /* Imprime o Vértice */
   printf (" %d", vertice);
 
-  TNo *aux = NULL;
-  aux = V->proximo;
-  while (aux != NULL)
+  /* Marca o Vértice como visitado */
+  visitado[vertice] = 1;
+
+  /* Desce mais uma camada no Grafo */
+  TNo *proximo = NULL;
+  proximo = G->adj[vertice];
+  while (proximo != NULL)
   {
-    busca_profundidade (G, aux, visitado);
-    aux = aux->proximo;
+    busca_profundidade (G, proximo, visitado);
+    /* Não há mais como se aprofundar, busca o próximo Vértice */
+    proximo = proximo->proximo;
   }
 }
 
 void freeGraph (TGrafo *G)
 {
-
   int i;
   for (i = 0; i < G->V; i++)
   {
