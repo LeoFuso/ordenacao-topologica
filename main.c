@@ -75,14 +75,14 @@ TGrafo *init (int V)
   g->A = 0;
 
   /* Aloca um vetor de lista de adjacências */
-  g->adj = (TNo **) calloc (V, sizeof (TNo *));
+  g->lista_adjacencias = (TNo **) calloc (V, sizeof (TNo *));
   return g;
 }
 
 TGrafo *grow (TGrafo *G, int V)
 {
   /* Aloca um vetor de lista de adjacências */
-  G->adj = (TNo **) realloc (G->adj, sizeof (TNo *) * (G->V + V));
+  G->lista_adjacencias = (TNo **) realloc (G->lista_adjacencias, sizeof (TNo *) * (G->V + V));
   G->V += V;
   return G;
 }
@@ -100,7 +100,7 @@ void insertA (TGrafo *G, int v, int w)
   TNo *novo, *aux, *ant;
 
   ant = NULL;
-  aux = G->adj[v];
+  aux = G->lista_adjacencias[v];
 
   /* Se existe aux e aux != NULL */
   while (aux && aux->vertice <= w)
@@ -123,7 +123,7 @@ void insertA (TGrafo *G, int v, int w)
 
   /* Se ant == NULL ou a lista está vazia ou devo inserir no início */
   if (ant == NULL)
-    G->adj[v] = novo;
+    G->lista_adjacencias[v] = novo;
   else
     ant->proximo = novo;
 
@@ -144,7 +144,7 @@ int indeg (TGrafo *G, int w)
 
   for (i = 0; i < controle; i++)
   {
-    aux = G->adj[i];
+    aux = G->lista_adjacencias[i];
     while (aux && aux->vertice)
     {
       if (aux->vertice == w)
@@ -169,7 +169,7 @@ int isPath (TGrafo *G, const int *seq, int k)
     int w = seq[i + 1];
 
     /* a partir da entrada [ v ] verifica os seus adjacentes */
-    TNo *aux = G->adj[v];
+    TNo *aux = G->lista_adjacencias[v];
     while (aux && aux->vertice != w)
       aux = aux->proximo;
 
@@ -201,7 +201,7 @@ void show (TGrafo *G)
     printf ("Vértice [ %d ] -> ", i);
 
     /* para cada entrada da lista pega o início da lista */
-    aux = G->adj[i];
+    aux = G->lista_adjacencias[i];
 
     /* enquanto não chegar ao final da lista */
     while (aux != NULL)
@@ -227,7 +227,7 @@ void busca (TGrafo *G)
   }
 
   TNo *root = NULL;
-  root = G->adj[0];
+  root = G->lista_adjacencias[0];
   visitado[0] = 1;
   printf (" %d", 0);
   while (root != NULL)
@@ -260,7 +260,7 @@ void busca_profundidade (TGrafo *G, TNo *V, int visitado[])
 
   /* Desce mais uma camada no Grafo */
   TNo *proximo = NULL;
-  proximo = G->adj[vertice];
+  proximo = G->lista_adjacencias[vertice];
   while (proximo != NULL)
   {
     busca_profundidade (G, proximo, visitado);
@@ -276,7 +276,7 @@ void freeGraph (TGrafo *G)
   {
     TNo *aux;
     TNo *proximo;
-    aux = G->adj[i];
+    aux = G->lista_adjacencias[i];
     do
     {
       proximo = aux->proximo;
