@@ -3,4 +3,4 @@ project(ordenacao_topologica C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(ordenacao_topologica main.c helper.h ordenacao_topologica.c ordenacao_topologica.h helper.c)
+add_executable(main main.c ordenacao_topologica.c helper.c grafo.c)
