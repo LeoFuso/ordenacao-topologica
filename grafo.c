@@ -219,7 +219,6 @@ int busca_ciclos (TGrafo *g)
 
   /* Marca como visitado */
   visitado[0] = 1;
-  printf (" %d", 0);
 
   int hasCiclos = 0;
   /* Começa a busca */
@@ -247,9 +246,6 @@ int _inner_busca_ciclos (TGrafo *g, TNo *no, int visitado[])
   {
     return 1;
   }
-
-  /* Imprime o Vértice */
-  printf (" %d", vertice);
 
   /* Marca o Vértice como visitado */
   visitado[vertice] = 1;
