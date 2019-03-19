@@ -140,45 +140,36 @@ void show (TGrafo *g)
 
 void busca_profundidade (TGrafo *g)
 {
-  /* Primeiro índice será ignorado */
-  int qtdVertices = (g->qtd_vertices) + 1;
-  int visitado[qtdVertices];
+  /* Cria um array para os vértices visitados, e inicializa todos com '0' */
+  int qtdVertices = (g->qtd_vertices);
+  int *visitados = NULL;
+  visitados = (int *) calloc ((size_t) qtdVertices, sizeof (int));
+
+  TNo *root = NULL;
 
   int i;
-  for (i = 0; i < qtdVertices; i++)
+  for (i = 0; i < qtdVertices; ++i)
   {
-    visitado[i] = 0;
-  }
-
-  /* Escolhe um Nó como Root */
-  TNo *root = NULL;
-  root = g->lista_adjacencias[0];
-
-  /* Marca como visitado */
-  visitado[0] = 1;
-  printf (" %d", 0);
-
-  /* Começa a busca */
-  while (root != NULL)
-  {
-    _inner_busca_profundidade (g, root, visitado);
-    root = root->proximo;
+    /* Escolhe um Nó como Root */
+    root = g->lista_adjacencias[i];
+    _inner_busca_profundidade (g, root, visitados);
   }
 
   /* Imprime as visitas */
   printf ("\nVisitado -> [ ");
   for (i = 0; i < qtdVertices - 1; i++)
   {
-    printf ("%d ", visitado[i]);
+    printf ("%d ", visitados[i]);
   }
   printf ("]");
 }
 
-void _inner_busca_profundidade (TGrafo *g, TNo *no, int visitado[])
+void _inner_busca_profundidade (TGrafo *g, TNo *no, int *visitados)
 {
   int vertice = no->vertice;
-  int isVisitado = visitado[vertice];
+  int isVisitado = visitados[vertice];
 
+  /* Se é visitado, simplesmente retorne */
   if (isVisitado)
   {
     return;
@@ -188,14 +179,14 @@ void _inner_busca_profundidade (TGrafo *g, TNo *no, int visitado[])
   printf (" %d", vertice);
 
   /* Marca o Vértice como visitado */
-  visitado[vertice] = 1;
+  visitados[vertice] = 1;
 
   /* Desce mais uma camada no Grafo */
   TNo *proximo = NULL;
   proximo = g->lista_adjacencias[vertice];
   while (proximo != NULL)
   {
-    _inner_busca_profundidade (g, proximo, visitado);
+    _inner_busca_profundidade (g, proximo, visitados);
     /* Não há mais como se aprofundar, busca o próximo Vértice */
     proximo = proximo->proximo;
   }
@@ -203,59 +194,54 @@ void _inner_busca_profundidade (TGrafo *g, TNo *no, int visitado[])
 
 int busca_ciclos (TGrafo *g)
 {
-  /* Primeiro índice será ignorado */
-  int qtdVertices = (g->qtd_vertices) + 1;
-  int visitado[qtdVertices];
+  /* Cria um array para os vértices visitados, e inicializa todos com '0' */
+  int qtdVertices = (g->qtd_vertices);
+  int *visitados = NULL;
+  visitados = (int *) calloc ((size_t) qtdVertices, sizeof (int));
+
+  TNo *root = NULL;
+  int hasCiclos = 0;
 
   int i;
-  for (i = 0; i < qtdVertices; i++)
+  for (i = 0; i < qtdVertices; ++i)
   {
-    visitado[i] = 0;
-  }
+    /* Escolhe um Nó como Root */
+    root = g->lista_adjacencias[i];
 
-  /* Escolhe um Nó como Root */
-  TNo *root = NULL;
-  root = g->lista_adjacencias[0];
+    /* Se esse Nó ainda não foi preenchido, não há sentido verificá-lo */
+    if (root == NULL)
+      continue;
 
-  /* Marca como visitado */
-  visitado[0] = 1;
-
-  int hasCiclos = 0;
-  /* Começa a busca */
-  while (root != NULL)
-  {
-    hasCiclos = _inner_busca_ciclos (g, root, visitado);
-
+    hasCiclos = _inner_busca_ciclos (g, root, visitados);
     if (hasCiclos)
     {
       return 1;
     }
-
-    root = root->proximo;
   }
   return 0;
 }
 
-int _inner_busca_ciclos (TGrafo *g, TNo *no, int visitado[])
+int _inner_busca_ciclos (TGrafo *g, TNo *no, int visitados[])
 {
   int hasCiclos = 0;
   int vertice = no->vertice;
-  int isVisitado = visitado[vertice];
+  int isVisitado = visitados[vertice];
 
+  /* Se é visitado, simplesmente retorne '1' */
   if (isVisitado)
   {
     return 1;
   }
 
   /* Marca o Vértice como visitado */
-  visitado[vertice] = 1;
+  visitados[vertice] = 1;
 
   /* Desce mais uma camada no Grafo */
   TNo *proximo = NULL;
   proximo = g->lista_adjacencias[vertice];
   while (proximo != NULL)
   {
-    hasCiclos = _inner_busca_ciclos (g, proximo, visitado);
+    hasCiclos = _inner_busca_ciclos (g, proximo, visitados);
     if (hasCiclos)
     {
       return 1;
@@ -263,7 +249,6 @@ int _inner_busca_ciclos (TGrafo *g, TNo *no, int visitado[])
     /* Não há mais como se aprofundar, busca o próximo Vértice */
     proximo = proximo->proximo;
   }
-
   return 0;
 }
 
