@@ -1,23 +1,12 @@
-#ifndef ORDTOP_H
-#define ORDTOP_H
+#ifndef HELPER_H
+#define HELPER_H
 
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 
-#define MAX_LINE_SIZE 50
-
-typedef struct _TNo {
-    int vertice;
-    struct _TNo *proximo;
-} TNo;
-
-typedef struct {
-    int qtd_vertices;
-    int qtd_arestas;
-    TNo **lista_adjacencias;
-} TGrafo;
+#define MAX_LINE_SIZE 51
 
 typedef struct {
     unsigned int tarefa_par;
@@ -31,6 +20,10 @@ typedef struct _TEntrada {
     TPar **pares;
 } TEntrada;
 
-TEntrada * read_file(FILE *, unsigned int);
+TEntrada *read_file (FILE *, unsigned int);
 
-#endif //ORDTOP_H
+FILE *_open_file (char *);
+
+unsigned int _count_lines (FILE *);
+
+#endif //HELPER_H

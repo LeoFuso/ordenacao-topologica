@@ -10,6 +10,7 @@ TEntrada *read_file (FILE *filePtr, unsigned int line_count)
 
   /* Serve como uma linha coringa para realizar a leitura do Documento */
   char *raw_line = NULL;
+  raw_line = (char *) calloc (MAX_LINE_SIZE, sizeof (char));
 
   /* Realiza a leitura da quantidade de tarefas */
   fgets (raw_line, MAX_LINE_SIZE, filePtr);
@@ -27,8 +28,8 @@ TEntrada *read_file (FILE *filePtr, unsigned int line_count)
 
   /* Realiza a leitura das tarefas */
   for (i = 0;
-       (fgets (raw_line, MAX_LINE_SIZE, filePtr) != NULL) &&
-       (i < entrada->qtd_tarefas);
+       (i < entrada->qtd_tarefas) &&
+       (fgets (raw_line, MAX_LINE_SIZE, filePtr) != NULL);
        ++i)
   {
     /*
@@ -57,8 +58,8 @@ TEntrada *read_file (FILE *filePtr, unsigned int line_count)
   char delimiter[] = " ";
   char *pares;
   for (i = 0;
-       (fgets (raw_line, MAX_LINE_SIZE, filePtr) != NULL) &&
-       (i < entrada->qtd_pares);
+       (i < entrada->qtd_pares) &&
+       (fgets (raw_line, MAX_LINE_SIZE, filePtr) != NULL);
        ++i)
   {
     /*
@@ -75,5 +76,56 @@ TEntrada *read_file (FILE *filePtr, unsigned int line_count)
 
   return entrada;
 }
+
+FILE *_open_file (char *filename)
+{
+  FILE *filePtr;
+
+  if ((filePtr = fopen (filename, "r")) == NULL)
+  {
+    printf ("Documento não encontrado.\n");
+    exit (0);
+  }
+
+  /*
+   *  Verifica se o arquivo está vazio
+   */
+  fseek (filePtr, 0, SEEK_END);
+
+  if (ftell (filePtr) == 0)
+  {
+    printf ("Documento está vazio.\n");
+    exit (0);
+  }
+
+  rewind (filePtr);
+  return filePtr;
+}
+
+unsigned int _count_lines (FILE *filePtr)
+{
+  unsigned int line_count = 0;
+  char *raw_line = NULL;
+
+  /*
+   *  Aloca o espaço de memória necessário para uma linha do documento
+   */
+  raw_line = (char *) malloc (MAX_LINE_SIZE * sizeof (char) + 1);
+
+  /*
+   *  Conta quantas linhas o documento possui
+   */
+  while (fgets (raw_line, MAX_LINE_SIZE, filePtr) != NULL)
+    line_count++;
+
+  /*
+   *  Rebobina o documento
+   */
+  rewind (filePtr);
+
+  free (raw_line);
+  return line_count;
+}
+
 
 

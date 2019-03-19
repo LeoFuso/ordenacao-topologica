@@ -5,12 +5,8 @@
 #ifndef ORDENACAO_TOPOLOGICA_H
 #define ORDENACAO_TOPOLOGICA_H
 
-#include <ctype.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include "helper.h"
-#define MAX_LINE_SIZE 50
+#include "grafo.h"
 
 void
 ordenar (char *filename);
