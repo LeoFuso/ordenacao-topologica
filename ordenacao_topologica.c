@@ -53,7 +53,7 @@ TGrafo *organiza_grafo (TEntrada *entrada)
   qtdTarefas = entrada->qtd_tarefas;
   qtdPares = entrada->qtd_pares;
 
-  g = init (qtdTarefas);
+  g = produce_grafo (qtdTarefas);
 
   int i;
   for (i = 0; i < qtdPares; ++i)

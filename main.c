@@ -27,7 +27,7 @@ int main ()
 
   TGrafo *grafo;
 
-  grafo = init (6);
+  grafo = produce_grafo (6);
   insert_aresta (grafo, 0, 2);
   insert_aresta (grafo, 0, 4);
   insert_aresta (grafo, 0, 3);

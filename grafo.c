@@ -7,7 +7,7 @@
 void _inner_busca_profundidade (TGrafo *, TNo *, int []);
 int _inner_busca_ciclos (TGrafo *, TNo *, int []);
 
-TGrafo *init (unsigned int qrd_vertices)
+TGrafo *produce_grafo (unsigned int qrd_vertices)
 {
   TGrafo *g;
 

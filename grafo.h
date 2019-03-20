@@ -28,7 +28,7 @@ typedef struct {
  * cria uma matriz de matriz de adjacências para
  * [ unsigned int ] vértices e zera os valores para arestas.
  */
-TGrafo *init (unsigned int);
+TGrafo *produce_grafo (unsigned int);
 
 /*
  * Para uma estrutura TGrafo existente, acrescenta
