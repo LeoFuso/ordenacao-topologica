@@ -12,7 +12,7 @@
 #include "queue.h"
 
 typedef struct _TNo {
-    int vertice;
+    unsigned int vertice;
     struct _TNo *proximo;
 } TNo;
 
