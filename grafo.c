@@ -252,20 +252,57 @@ int _inner_busca_ciclos (TGrafo *g, TNo *no, int visitados[])
   return 0;
 }
 
+void busca_largura (TGrafo *g, unsigned int v)
+{
+  /* Aloca array para guardar os vértices visitados */
+  int *visitados = NULL;
+  visitados = (int *) calloc ((size_t) g->qtd_vertices, sizeof (int));
+
+  /* Cria uma instância de TQueue para armazenar a fila utilizada na 'busca_largura' */
+  TQueue *q = NULL;
+  q = produce_queue (g->qtd_vertices);
+
+  /* Marca o vértice inicial como visitado */
+  visitados[v] = 1;
+
+  /* Guarda-o na fila */
+  queue (q, v);
+
+  /* Enquanto a fila não está vazia */
+  TNo *proximo = NULL;
+  while (!is_empty (q))
+  {
+    int u = dequeue (q);
+    printf ("[ %i ]\n", u);
+
+    /* Navega pelo Grafo de adjacências enfileirando os próximos vértices */
+    proximo = g->lista_adjacencias[u];
+    while (proximo)
+    {
+      if (!visitados[proximo->vertice])
+      {
+        visitados[proximo->vertice] = 1;
+        queue (q, proximo->vertice);
+      }
+      proximo = proximo->proximo;
+    }
+  }
+}
+
 void free_graph (TGrafo *g)
 {
   int i;
   for (i = 0; i < g->qtd_vertices; i++)
   {
-    TNo *aux;
-    TNo *proximo;
+    TNo *aux = NULL;
+    TNo *proximo = NULL;
     aux = g->lista_adjacencias[i];
-    do
+    while (aux != NULL)
     {
       proximo = aux->proximo;
       free (aux);
-    }
-    while (proximo != NULL);
+      aux = proximo;
+    };
   }
+  free (g);
 }
-

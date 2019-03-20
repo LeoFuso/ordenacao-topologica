@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "queue.h"
 
 typedef struct _TNo {
     int vertice;
@@ -16,7 +17,7 @@ typedef struct _TNo {
 } TNo;
 
 typedef struct {
-    int qtd_vertices;
+    unsigned int qtd_vertices;
     int qtd_arestas;
     TNo **lista_adjacencias;
 } TGrafo;
@@ -72,6 +73,8 @@ void show (TGrafo *);
 void busca_profundidade (TGrafo *);
 
 int busca_ciclos (TGrafo *);
+
+void busca_largura(TGrafo *, unsigned int);
 
 void free_graph (TGrafo *);
 
