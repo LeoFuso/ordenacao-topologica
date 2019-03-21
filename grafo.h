@@ -39,11 +39,18 @@ TGrafo *grow (TGrafo *, unsigned int);
 /*
  * Cria uma aresta [ unsigned int a - unsigned int b] na
  * estrutura TGrafo.
- * A função supõe que [ unsigned int a ] e [ unsigned int b ]
- * são distintos, positivos e menores que [ g -> qtd_vertices ].
+ *
+ * A função realiza a validação que [ unsigned int a ] e [ unsigned int b ]
+ * são distintos, positivos e menores que [ g -> qtd_vertices ],
+ * caso contrário, a função retorna '0'.
+ *
  * Se o grafo já tem a aresta [ unsigned int a - unsigned int b ],
  * a função não faz nada e retorna '1'. Caso a inserção seja
  * bem sucedida, retorna '0'.
+ *
+ * Se a inserção dessa aresta causará um Ciclo, ele também não insere,
+ * e retorna '1'.
+ *
  * A função também atualiza a quantidade
  * de arestas na estrutura  TGrafo.
  */
@@ -70,11 +77,7 @@ int is_caminho (TGrafo *, const int *, unsigned int);
  */
 void show (TGrafo *);
 
-void busca_profundidade (TGrafo *);
-
-int busca_ciclos (TGrafo *);
-
-void busca_largura(TGrafo *, unsigned int);
+void busca_largura (TGrafo *, unsigned int);
 
 void free_graph (TGrafo *);
 

@@ -3,6 +3,7 @@
 //
 
 #include "helper.h"
+
 TEntrada *read_file (FILE *filePtr, unsigned int line_count)
 {
   /* Aloca TEntrada */
