@@ -54,7 +54,7 @@ int insert_aresta (TGrafo *, unsigned int, unsigned int);
  * TGrafo para um vértice de valor [ unsigned int ],
  * se sucedida, retorna o seu grau de entrada.
  */
-int grau_de_entrada (TGrafo *, unsigned int);
+unsigned int grau_de_entrada (TGrafo *, unsigned int);
 
 /*
  * Verifica se uma sequência de vértices

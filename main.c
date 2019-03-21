@@ -2,13 +2,12 @@
 #include <stdlib.h>
 #include "ordenacao_topologica.h"
 /* Cliente */
-/*
 int
 main (int argc, char *argv[])
 {
-  *//*
-   *  Tenta ler o documento 'entrada'
-   *//*
+
+   /*Tenta ler o documento 'entrada'*/
+
   if (argc != 2)
   {
     printf ("Sintaxe: main [documento] (qualquer extensão é implícita) \n");
@@ -20,8 +19,7 @@ main (int argc, char *argv[])
 
   return 0;
 }
- */
-
+/*
 int main ()
 {
 
@@ -42,5 +40,5 @@ int main ()
   busca_largura (grafo, 1);
 
   return 0;
-}
+}*/
 

@@ -6,7 +6,7 @@
 
 void _inner_busca_profundidade (TGrafo *, TNo *, int []);
 int _inner_busca_ciclos (TGrafo *, TNo *, int []);
-int _is_ciclico (TGrafo *, unsigned int);
+int _is_ciclico (TGrafo *, unsigned int, unsigned int);
 void _check_ciclico (TGrafo *, unsigned int, int *);
 
 TGrafo *produce_grafo (unsigned int qrd_vertices)
@@ -31,30 +31,33 @@ TGrafo *grow (TGrafo *G, unsigned int qtd_vertices_adicionais)
   return G;
 }
 
-int _is_ciclico (TGrafo *g, unsigned int vertice_candidato)
+int _is_ciclico (TGrafo *g, unsigned int par, unsigned int impar)
 {
   int *visitados = NULL;
   visitados = (int *) calloc (g->qtd_vertices, sizeof (int));
-  _check_ciclico (g, vertice_candidato, visitados);
-  return visitados[vertice_candidato];
+  _check_ciclico (g, impar, visitados);
+  return visitados[par];
 }
 
 void _check_ciclico (TGrafo *g, unsigned int v, int *visitados)
 {
   TNo *aux = NULL;
-
+  int isVisitado = 0;
   /* Marca vértice como visitado */
   visitados[v] = 1;
 
   aux = g->lista_adjacencias[v];
   while (aux != NULL)
   {
-    _check_ciclico (g, aux->vertice, visitados);
+    isVisitado = visitados[aux->vertice];
+    if(!isVisitado) {
+      _check_ciclico (g, aux->vertice, visitados);
+    }
     aux = aux->proximo;
   }
 }
 
-int insert_aresta (TGrafo *g, unsigned int v, unsigned int w)
+int insert_aresta (TGrafo *g, unsigned int par, unsigned int impar)
 {
   TNo *novo;
   TNo *aux;
@@ -65,26 +68,26 @@ int insert_aresta (TGrafo *g, unsigned int v, unsigned int w)
   int isCiclico = 0;
 
   ant = NULL;
-  aux = g->lista_adjacencias[v];
+  aux = g->lista_adjacencias[par];
 
-  verticesIguais = v == w;
+  verticesIguais = par == impar;
   if (verticesIguais)
   {
-    printf ("TAREFAS [ %d, %d ] SÃO REPETIDAS\n", v, w);
+    printf ("TAREFAS [ %d, %d ] SÃO REPETIDAS\n", par, impar);
     return 1;
   }
 
   /* Se existe aux e aux != NULL */
-  while (aux && aux->vertice <= w)
+  while (aux && aux->vertice <= impar)
   {
     /*
      * Se o grafo já tem a aresta
-     * [ v - w ], a função não faz nada.
+     * [ par - impar ], a função não faz nada.
      */
-    parRepetido = aux->vertice == w;
+    parRepetido = aux->vertice == impar;
     if (parRepetido)
     {
-      printf ("TAREFAS [ %d, %d ] JÁ INSERIDAS\n", v, w);
+      printf ("TAREFAS [ %d, %d ] JÁ INSERIDAS\n", par, impar);
       return 1;
     }
 
@@ -92,19 +95,19 @@ int insert_aresta (TGrafo *g, unsigned int v, unsigned int w)
     aux = aux->proximo; /* anda para frente */
   }
 
-  isCiclico = _is_ciclico (g, v);
+  isCiclico = _is_ciclico (g, par, impar);
   if (isCiclico)
   {
-    printf ("TAREFAS [ %d, %d ] FORMAM CICLOS\n", v, w);
+    printf ("TAREFAS [ %d, %d ] FORMAM CICLOS\n", par, impar);
   }
 
   novo = (TNo *) calloc (1, sizeof (TNo));
-  novo->vertice = w;
+  novo->vertice = impar;
   novo->proximo = aux;
 
   /* Se ant == NULL ou a lista está vazia ou devo inserir no início */
   if (ant == NULL)
-    g->lista_adjacencias[v] = novo;
+    g->lista_adjacencias[par] = novo;
   else
     ant->proximo = novo;
 
@@ -114,12 +117,12 @@ int insert_aresta (TGrafo *g, unsigned int v, unsigned int w)
   return 0;
 }
 
-int grau_de_entrada (TGrafo *g, unsigned int w)
+unsigned int grau_de_entrada (TGrafo *g, unsigned int w)
 {
   int i;
   TNo *aux = NULL;
   int controle = g->qtd_vertices;
-  int grau_de_entrada = 0;
+  unsigned int grau_de_entrada = 0;
 
   for (i = 0; i < controle; i++)
   {
